@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>바운더리엑스 블루투스 램프 컨트롤러</title><link rel="icon" href="Favicon.png"><link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"><link rel="stylesheet" href="style.css"><script type="module" src="app.mjs"></script></head>
+<body><header><div class="title"><a class="brand" href="https://boundaryx.io" aria-label="바운더리엑스 홈페이지"><img src="boundaryx_logo.png" alt="boundaryX"></a><span>블루투스 램프 컨트롤러</span></div><div class="header-actions"><a class="help-button" href="#support">도움말</a><a class="back-button" href="https://boundaryx.io/59">돌아가기</a></div></header>
+<main><section class="control-group"><h3>1. 기기 연결</h3><p>마이크로비트와 연결하면 모든 LED가 같은 색으로 빛납니다.</p><div id="connection" role="status">연결 대기 중 · 미리보기 가능</div><div class="button-group"><button id="connect">기기 연결</button><button id="disconnect" class="secondary" disabled>연결 해제</button></div></section>
+<section class="control-group controller"><h3>2. 블루투스 램프 컨트롤러</h3><div class="preview"><div id="light" aria-label="현재 색상 미리보기"></div><div><span class="preview-label">밝기 적용 후 RGB</span><div id="rgbText">R 255 · G 128 · B 0</div><small id="playState" role="status">직접 조절 · 미리보기</small></div></div><div class="display-screen"><span>전송 데이터</span><output id="sent">연결 대기 중</output></div>
+<div class="tabs" role="tablist" aria-label="조절 방식"><button role="tab" aria-selected="true" aria-controls="manual" id="tab-manual" data-mode="manual">직접 조절</button><button role="tab" aria-selected="false" aria-controls="flow" id="tab-flow" data-mode="flow">색상 흐름</button><button role="tab" aria-selected="false" aria-controls="effects" id="tab-effects" data-mode="effects">효과</button></div>
+<div id="manual" role="tabpanel" aria-labelledby="tab-manual"><p>컬러휠을 터치하거나 RGB 값을 입력하세요. 연결 중에는 바로 반영됩니다.</p><div class="wheel-wrap"><canvas id="wheel" width="320" height="320" aria-label="색상과 채도 선택. 키보드 사용 시 아래 RGB 입력을 이용하세요."></canvas><span id="cursor"></span></div><p class="input-note">기본 색상 RGB · 아래 밝기가 적용된 값이 전송됩니다.</p><div class="rgb-inputs"><label>R<input id="red" type="number" min="0" max="255" value="255"></label><label>G<input id="green" type="number" min="0" max="255" value="128"></label><label>B<input id="blue" type="number" min="0" max="255" value="0"></label></div><div id="swatches" class="swatches" aria-label="기본 색상"></div></div>
+<div id="flow" role="tabpanel" aria-labelledby="tab-flow" hidden><p>각 단계의 색상, 그 색으로 바뀌는 시간, 유지 시간을 정하세요.</p><div id="steps"></div><button id="addStep" class="secondary">+ 단계 추가</button><label class="check"><input id="loop" type="checkbox" checked> 반복 재생</label><div class="button-group"><button id="save" class="secondary">흐름 저장</button><button id="load" class="secondary">흐름 불러오기</button><input id="file" type="file" accept=".json,application/json" hidden></div></div>
+<div id="effects" role="tabpanel" aria-labelledby="tab-effects" hidden><p>효과를 선택한 뒤 재생을 누르세요. 연결 전에도 미리볼 수 있습니다.</p><div id="effectCards" class="effect-grid"></div><label id="effectColorLabel">효과 색상<input id="effectColor" type="color" value="#ff8000"></label><label for="speed">속도 <output id="speedText">1×</output><input id="speed" type="range" min="0.25" max="3" step="0.05" value="1"></label></div>
+<label class="brightness" for="brightness">밝기 <output id="brightnessText">50%</output><input id="brightness" type="range" min="0" max="100" value="50"></label><p id="effectSelection" class="selection-note" hidden></p><div id="transport" class="button-group" hidden><button id="play">재생</button><button id="pause" class="secondary" disabled>일시정지</button><button id="stop" class="secondary">재생 정지</button></div><button id="off" class="off">조명 끄기</button><p class="hint" id="stopHint" hidden>재생 정지는 현재 색상을 유지하고, 조명 끄기는 RGB를 모두 0으로 보냅니다.</p><div id="notice" role="status"></div></section>
+<details class="control-group" id="support"><summary>사용 가이드 및 지원</summary><p>색을 고르고, 흐름을 만들고, 조명으로 표현해보세요.</p><details><summary>처음 사용하기</summary><p>마이크로비트에 RGB 수신 코드를 넣고 기기 연결을 누르세요. 직접 조절은 선택 즉시 전송됩니다. 색상 흐름과 효과는 재생 버튼을 눌러 시작하세요. 연결 전에도 미리보기가 가능합니다.</p></details><details><summary>전송 데이터 규격</summary><p><code>R255G000B128</code> 뒤에 줄바꿈이 붙습니다. 각 값은 000~255입니다. LED 개수와 연결 핀은 마이크로비트 코드에서 설정합니다. 화면의 전송 완료는 블루투스 쓰기 완료를 뜻하며 LED 점등 확인 응답은 아닙니다.</p></details><details><summary>연결이 안 되거나 조명이 멈춰요</summary><p>블루투스 UART 수신 코드와 브라우저 지원 여부를 확인하세요. 아이폰은 Bluefy를 사용하세요. 탭을 벗어나거나 화면을 잠그면 재생이 일시정지됩니다. 돌아온 뒤 재생을 눌러주세요. 연결이 끊기면 마지막 색이 남을 수 있습니다.</p></details><details><summary>예제 코드 · 수업 자료</summary><p>연결할 보드의 네오픽셀 확장과 핀에 맞춘 예제 링크는 추후 추가됩니다.</p></details><details><summary>업데이트 노트</summary><p>컬러휠, 색상 흐름 저장·불러오기, 6가지 조명 효과, 고정 길이 RGB 전송을 추가했습니다.</p></details></details></main>
+<footer>
+    <div class="footer-container">
+      
+      <div class="footer-top">
+        <div class="footer-info">
+          <h2 class="footer-logo">바운더리엑스</h2>
+          <p class="slogan">"우리는 산업과 교육의 경계를 허물고, 미래 기술을 교실의 책상 위로 옮기는 사람들입니다"</p>
+          <address>
+            <p>경기도 화성시 동탄첨단산업1로 57 동탄2인큐베이팅센터, 7층 706호</p>
+            <p class="copyright">© 2024 Boundary X Co. All rights reserved.</p>
+          </address>
+        </div>
+
+        <div class="footer-links">
+          
+          <div class="link-column">
+            <h4>제품 소개</h4>
+            <ul>
+              <li>
+                <a href="https://boundaryx.io/shop/?idx=25" target="_blank">AI 비트런</a>
+                <span class="link-desc">마이크로비트 기반 이족보행로봇</span>
+              </li>
+              <li>
+                <a href="https://boundaryx.io/shop/?idx=26" target="_blank">AI 포니봇</a>
+                <span class="link-desc">마이크로비트 기반 모빌리티로봇</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="link-column">
+            <h4>고객 지원</h4>
+            <ul>
+              <li>
+                <a href="https://boundaryx.io/contact" target="_blank">문의처</a>
+                <span class="link-desc">제품 문의 | 제휴 문의 | 연수 문의</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </footer></body></html>

@@ -1,0 +1,12 @@
+{
+  "mode": "built-in image_gen",
+  "transparent_background": true,
+  "subjects": {
+    "breath": "a single plump turquoise inflated cushion-like orb, subtle luminous center, representing slow breathing light",
+    "candle": "a short cream wax candle with a small warm orange glowing flame",
+    "lava": "a rounded miniature dark plum volcano with thick bright orange molten lava flowing down its side",
+    "ocean": "a single curled turquoise ocean wave with rounded white foam crest",
+    "rainbow": "a plump pastel rainbow arch with two tiny white cloud feet",
+    "firefly": "a cute small firefly with dark navy body, translucent blue wings and a luminous yellow-green abdomen, no face"
+  }
+}
